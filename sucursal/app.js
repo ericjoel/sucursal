@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var socketio = require('./socketData/socket');
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var anillos = require('./routes/anillo');
 var app = express();
 
 // view engine setup
@@ -24,6 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/anillo',anillos);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -70,6 +72,7 @@ var http = require('http').Server(app)
 
 
 socketio(http);
+
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
