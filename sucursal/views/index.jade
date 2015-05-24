@@ -1,5 +1,27 @@
 extends layout
 
+block pageStyle
+  link(rel='stylesheet', href='/stylesheets/pruebaChat.css')
+
 block content
   h1= title
   p Welcome to #{title}
+  ul(id="message")
+  
+  form(action="")
+    input#m(autocomplete="off")
+    button Send
+  
+  script(src="socket.io/socket.io.js")
+  script(src="http://code.jquery.com/jquery-1.11.1.js")
+  
+  script(type="text/javascript").
+    var socket = io();
+    $('form').submit(function(){
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        return false;
+    });
+    socket.on('chat message', function(msg){
+        $('#message').append($('<li>').text(msg));
+    });

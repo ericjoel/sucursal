@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var socketio = require('./socketData/socket');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -57,4 +57,65 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
+
+//var app = require('../app');
+var debug = require('debug')('sucursal:server');
+//var http = require('http');
+var http = require('http').Server(app)
+
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+
+socketio(http);
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});
+
+http.on('error', onError);
+http.on('listening', onListening);
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = http.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+//module.exports = app;
